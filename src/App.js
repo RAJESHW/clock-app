@@ -1,51 +1,55 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from 'react'
+import './App.css'
 
 class App extends Component {
-  constructor() {
-    super();
-      this.state = {
-        hours : "default",
-        min : "default",
-        sec : "default",
-        milliSec : "default"
-      };
-  }
-  calculateTime() {
-    var time = new Date();
-    var hours = time.getHours();
-    var min = time.getMinutes();
-    var sec = time.getSeconds();
-    var milliSec = time.getMilliseconds();
-    return {
-      hours : hours,
-      min : min,
-      sec : sec,
-      milliSec : milliSec
 
+  constructor() {
+    super()
+
+    this.state = {
+      hours: 0,
+      minutes: 0,
+      seconds: 0
     }
   }
+
+  componentDidMount() {
+    // this.timer is a variable added to the class.
+    // You can create those as many as you want or need
+    // Their lifespan is only inside the class
+    this.timer = setInterval(() => this._ticker(), 1000)
+  }
+
+  _ticker() {
+    const date = new Date()
+
+    this.setState({
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds()
+    })
+
+  }
+
+  componentWillUnmount() {
+    // Clearing time-based operations is very important to save memory.
+    clearInterval(this.timer)
+  }
+
   render() {
-    setInterval(() => {
-      var time = this.calculateTime();
-      this.setState({
-        hours : time.hours,
-        min : time.min,
-        sec : time.sec,
-        milliSec : time.milliSec
-      });
-    },100);
+
+    // Extract the information you need. Do not keep referring to
+    // this.state.foo or this.props.foo
+    const { hours, minutes, seconds } = this.state
+
     return (
       <div className="App">
-        <div id="time">
-          <span>Hours: {this.state.hours}</span>
-          <span>Min: {this.state.min}</span>
-          <span>Seconds: {this.state.sec}</span>
-          <span>Milli Seconds: {this.state.milliSec}</span>
+        <div id="clock">
+          {hours}:{minutes}:{seconds}
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
